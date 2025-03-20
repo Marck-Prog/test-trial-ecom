@@ -1,11 +1,11 @@
-'use client'
+"use client";
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import Image from 'next/image'
-import { useRouter } from 'next/navigation'
-import { useForm } from 'react-hook-form'
-import { Button } from '@/components/ui/button'
-import { Card, CardContent } from '@/components/ui/card'
+import { zodResolver } from "@hookform/resolvers/zod";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useForm } from "react-hook-form";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -14,47 +14,27 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
-import { Textarea } from '@/components/ui/textarea'
-import { useToast } from '@/hooks/use-toast'
-import { createProduct, updateProduct } from '@/lib/actions/product.actions'
-import { IProduct } from '@/lib/db/models/product.model'
-import { UploadButton } from '@/lib/uploadthing'
-import { ProductInputSchema, ProductUpdateSchema } from '@/lib/validator'
-import { Checkbox } from '@/components/ui/checkbox'
-import { toSlug } from '@/lib/utils'
-import { IProductInput } from '@/types'
+} from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { createProduct, updateProduct } from "@/lib/actions/product.actions";
+import { IProduct } from "@/lib/db/models/product.model";
+import { UploadButton } from "@/lib/uploadthing";
+import { ProductInputSchema, ProductUpdateSchema } from "@/lib/validator";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toSlug } from "@/lib/utils";
+import { IProductInput } from "@/types";
 
 const productDefaultValues: IProductInput =
-  process.env.NODE_ENV === 'development'
+  process.env.NODE_ENV === "development"
     ? {
-        name: 'Sample Product',
-        slug: 'sample-product',
-        category: 'Sample Category',
-        images: ['/images/p11-1.jpg'],
-        brand: 'Sample Brand',
-        description: 'This is a sample description of the product.',
-        price: 99.99,
-        listPrice: 0,
-        countInStock: 15,
-        numReviews: 0,
-        avgRating: 0,
-        numSales: 0,
-        isPublished: false,
-        tags: [],
-        sizes: [],
-        colors: [],
-        ratingDistribution: [],
-        reviews: [],
-      }
-    : {
-        name: '',
-        slug: '',
-        category: '',
+        name: "",
+        slug: "",
+        category: "",
         images: [],
-        brand: '',
-        description: '',
+        brand: "",
+        description: "",
         price: 0,
         listPrice: 0,
         countInStock: 0,
@@ -68,77 +48,97 @@ const productDefaultValues: IProductInput =
         ratingDistribution: [],
         reviews: [],
       }
+    : {
+        name: "",
+        slug: "",
+        category: "",
+        images: [],
+        brand: "",
+        description: "",
+        price: 0,
+        listPrice: 0,
+        countInStock: 0,
+        numReviews: 0,
+        avgRating: 0,
+        numSales: 0,
+        isPublished: false,
+        tags: [],
+        sizes: [],
+        colors: [],
+        ratingDistribution: [],
+        reviews: [],
+      };
 
 const ProductForm = ({
   type,
   product,
   productId,
 }: {
-  type: 'Create' | 'Update'
-  product?: IProduct
-  productId?: string
+  type: "Create" | "Update";
+  product?: IProduct;
+  productId?: string;
 }) => {
-  const router = useRouter()
+  const router = useRouter();
 
   const form = useForm<IProductInput>({
     resolver:
-      type === 'Update'
+      type === "Update"
         ? zodResolver(ProductUpdateSchema)
         : zodResolver(ProductInputSchema),
     defaultValues:
-      product && type === 'Update' ? product : productDefaultValues,
-  })
+      product && type === "Update" ? product : productDefaultValues,
+  });
 
-  const { toast } = useToast()
+  const { toast } = useToast();
   async function onSubmit(values: IProductInput) {
-    if (type === 'Create') {
-      const res = await createProduct(values)
+    if (type === "Create") {
+      const res = await createProduct(values);
       if (!res.success) {
         toast({
-          variant: 'destructive',
+          variant: "destructive",
           description: res.message,
-        })
+        });
       } else {
         toast({
           description: res.message,
-        })
-        router.push(`/admin/products`)
+        });
+        router.push(`/admin/products`);
       }
     }
-    if (type === 'Update') {
+    if (type === "Update") {
       if (!productId) {
-        router.push(`/admin/products`)
-        return
+        router.push(`/admin/products`);
+        return;
       }
-      const res = await updateProduct({ ...values, _id: productId })
+      const res = await updateProduct({ ...values, _id: productId });
       if (!res.success) {
         toast({
-          variant: 'destructive',
+          variant: "destructive",
           description: res.message,
-        })
+        });
       } else {
-        router.push(`/admin/products`)
+        router.push(`/admin/products`);
       }
     }
   }
-  const images = form.watch('images')
+  const images = form.watch("images");
 
   return (
     <Form {...form}>
       <form
-        method='post'
+        method="post"
         onSubmit={form.handleSubmit(onSubmit)}
-        className='space-y-8'
+        className="space-y-8"
       >
-        <div className='flex flex-col gap-5 md:flex-row'>
+        <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}
-            name='name'
+            name="name"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Name</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter product name' {...field} />
+                  <Input placeholder="Enter product name" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -148,24 +148,24 @@ const ProductForm = ({
 
           <FormField
             control={form.control}
-            name='slug'
+            name="slug"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Slug</FormLabel>
 
                 <FormControl>
-                  <div className='relative'>
+                  <div className="relative">
                     <Input
-                      placeholder='Enter product slug'
-                      className='pl-8'
+                      placeholder="Enter product slug"
+                      className=""
                       {...field}
                     />
                     <button
-                      type='button'
+                      type="button"
                       onClick={() => {
-                        form.setValue('slug', toSlug(form.getValues('name')))
+                        form.setValue("slug", toSlug(form.getValues("name")));
                       }}
-                      className='absolute right-2 top-2.5'
+                      className="absolute right-2 top-2.5"
                     >
                       Generate
                     </button>
@@ -177,15 +177,15 @@ const ProductForm = ({
             )}
           />
         </div>
-        <div className='flex flex-col gap-5 md:flex-row'>
+        <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}
-            name='category'
+            name="category"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Category</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter category' {...field} />
+                  <Input placeholder="Enter category" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -194,12 +194,12 @@ const ProductForm = ({
 
           <FormField
             control={form.control}
-            name='brand'
+            name="brand"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Brand</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter product brand' {...field} />
+                  <Input placeholder="Enter product brand" {...field} />
                 </FormControl>
 
                 <FormMessage />
@@ -207,15 +207,15 @@ const ProductForm = ({
             )}
           />
         </div>
-        <div className='flex flex-col gap-5 md:flex-row'>
+        <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}
-            name='listPrice'
+            name="listPrice"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>List Price</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter product list price' {...field} />
+                  <Input placeholder="Enter product list price" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -223,12 +223,12 @@ const ProductForm = ({
           />
           <FormField
             control={form.control}
-            name='price'
+            name="price"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Net Price</FormLabel>
                 <FormControl>
-                  <Input placeholder='Enter product price' {...field} />
+                  <Input placeholder="Enter product price" {...field} />
                 </FormControl>
                 <FormMessage />
               </FormItem>
@@ -236,14 +236,14 @@ const ProductForm = ({
           />
           <FormField
             control={form.control}
-            name='countInStock'
+            name="countInStock"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Count In Stock</FormLabel>
                 <FormControl>
                   <Input
-                    type='number'
-                    placeholder='Enter product count in stock'
+                    type="number"
+                    placeholder="Enter product count in stock"
                     {...field}
                   />
                 </FormControl>
@@ -253,37 +253,96 @@ const ProductForm = ({
           />
         </div>
 
-        <div className='flex flex-col gap-5 md:flex-row'>
+        {/* New Fields: numReviews, avgRating, numSales */}
+        <div className="flex flex-col gap-5 md:flex-row">
           <FormField
             control={form.control}
-            name='images'
+            name="numReviews"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Number of Reviews</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter number of reviews"
+                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="avgRating"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Average Rating</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    step="0.1"
+                    placeholder="Enter average rating"
+                    {...field}
+                    onChange={(e) => field.onChange(parseFloat(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+          <FormField
+            control={form.control}
+            name="numSales"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Number of Sales</FormLabel>
+                <FormControl>
+                  <Input
+                    type="number"
+                    placeholder="Enter number of sales"
+                    {...field}
+                    onChange={(e) => field.onChange(parseInt(e.target.value))}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div className="flex flex-col gap-5 md:flex-row">
+          <FormField
+            control={form.control}
+            name="images"
             render={() => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Images</FormLabel>
                 <Card>
-                  <CardContent className='space-y-2 mt-2 min-h-48'>
-                    <div className='flex justify-start items-center space-x-2'>
+                  <CardContent className="space-y-2 mt-2 min-h-48">
+                    <div className="flex justify-start items-center space-x-2">
                       {images.map((image: string) => (
                         <Image
                           key={image}
                           src={image}
-                          alt='product image'
-                          className='w-20 h-20 object-cover object-center rounded-sm'
+                          alt="product image"
+                          className="w-20 h-20 object-cover object-center rounded-sm"
                           width={100}
                           height={100}
                         />
                       ))}
                       <FormControl>
                         <UploadButton
-                          endpoint='imageUploader'
+                          endpoint="imageUploader"
                           onClientUploadComplete={(res: { url: string }[]) => {
-                            form.setValue('images', [...images, res[0].url])
+                            form.setValue("images", [...images, res[0].url]);
                           }}
                           onUploadError={(error: Error) => {
                             toast({
-                              variant: 'destructive',
+                              variant: "destructive",
                               description: `ERROR! ${error.message}`,
-                            })
+                            });
                           }}
                         />
                       </FormControl>
@@ -300,14 +359,14 @@ const ProductForm = ({
         <div>
           <FormField
             control={form.control}
-            name='description'
+            name="description"
             render={({ field }) => (
-              <FormItem className='w-full'>
+              <FormItem className="w-full">
                 <FormLabel>Description</FormLabel>
                 <FormControl>
                   <Textarea
-                    placeholder='Tell us a little bit about yourself'
-                    className='resize-none'
+                    placeholder="Tell us a little bit about yourself"
+                    className="resize-none"
                     {...field}
                   />
                 </FormControl>
@@ -320,12 +379,144 @@ const ProductForm = ({
             )}
           />
         </div>
+
+        {/* New Fields: tags, sizes, colors */}
         <div>
           <FormField
             control={form.control}
-            name='isPublished'
+            name="tags"
             render={({ field }) => (
-              <FormItem className='space-x-2 items-center'>
+              <FormItem className="w-full">
+                <FormLabel>Tags (comma-separated)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter tags (e.g., electronics, gadget)"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.split(",").map((tag) => tag.trim())
+                      )
+                    }
+                    value={field.value.join(", ")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="sizes"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Sizes (comma-separated)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter sizes (e.g., S, M, L)"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.split(",").map((size) => size.trim())
+                      )
+                    }
+                    value={field.value.join(", ")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="colors"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Colors (comma-separated)</FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter colors (e.g., Red, Blue)"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.split(",").map((color) => color.trim())
+                      )
+                    }
+                    value={field.value.join(", ")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        {/* New Fields: ratingDistribution, reviews */}
+        <div>
+          <FormField
+            control={form.control}
+            name="ratingDistribution"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>
+                  Rating Distribution (comma-separated numbers)
+                </FormLabel>
+                <FormControl>
+                  <Input
+                    placeholder="Enter rating distribution (e.g., 10, 20, 30, 25, 15)"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value
+                          .split(",")
+                          .map((num) => parseInt(num.trim()))
+                      )
+                    }
+                    value={field.value.join(", ")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="reviews"
+            render={({ field }) => (
+              <FormItem className="w-full">
+                <FormLabel>Reviews (comma-separated)</FormLabel>
+                <FormControl>
+                  <Textarea
+                    placeholder="Enter reviews (e.g., Great product, Very useful)"
+                    {...field}
+                    onChange={(e) =>
+                      field.onChange(
+                        e.target.value.split(",").map((review) => review.trim())
+                      )
+                    }
+                    value={field.value.join(", ")}
+                  />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </div>
+
+        <div>
+          <FormField
+            control={form.control}
+            name="isPublished"
+            render={({ field }) => (
+              <FormItem className="space-x-2 items-center">
                 <FormControl>
                   <Checkbox
                     checked={field.value}
@@ -339,17 +530,17 @@ const ProductForm = ({
         </div>
         <div>
           <Button
-            type='submit'
-            size='lg'
+            type="submit"
+            size="lg"
             disabled={form.formState.isSubmitting}
-            className='button col-span-2 w-full'
+            className="button col-span-2 w-full"
           >
-            {form.formState.isSubmitting ? 'Submitting...' : `${type} Product `}
+            {form.formState.isSubmitting ? "Submitting..." : `${type} Product `}
           </Button>
         </div>
       </form>
     </Form>
-  )
-}
+  );
+};
 
-export default ProductForm
+export default ProductForm;
