@@ -1,4 +1,4 @@
-import { Geist, Geist_Mono } from 'next/font/google'
+import { Roboto_Condensed } from 'next/font/google'
 import '../globals.css'
 import ClientProviders from '@/components/shared/client-providers'
 import { getDirection } from '@/i18n-config'
@@ -9,14 +9,9 @@ import { notFound } from 'next/navigation'
 import { getSetting } from '@/lib/actions/setting.actions'
 import { cookies } from 'next/headers'
 
-const geistSans = Geist({
-  variable: '--font-geist-sans',
+const robotoCondensed = Roboto_Condensed({
   subsets: ['latin'],
-})
-
-const geistMono = Geist_Mono({
-  variable: '--font-geist-mono',
-  subsets: ['latin'],
+  variable: '--font-roboto-condensed',
 })
 
 export async function generateMetadata() {
@@ -58,9 +53,7 @@ export default async function AppLayout({
       dir={getDirection(locale) === 'rtl' ? 'rtl' : 'ltr'}
       suppressHydrationWarning
     >
-      <body
-        className={`min-h-screen ${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+      <body className={`min-h-screen ${robotoCondensed.variable} antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ClientProviders setting={{ ...setting, currency }}>
             {children}
