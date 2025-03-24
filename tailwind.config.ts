@@ -10,6 +10,15 @@ const config: Config = withUt({
   ],
   theme: {
     extend: {
+      screens: {
+        xs: '320px',
+        sm: '375px',
+        md: '425px',
+        lg: '768px',
+        xl: '1024px',
+        '2xl': '1440px',
+        '4xl': '2560px',
+      },
       colors: {
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
@@ -56,6 +65,15 @@ const config: Config = withUt({
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
         sm: 'calc(var(--radius) - 4px)',
+      },
+      animation: {
+        scroll: 'scroll 20s linear infinite',
+      },
+      keyframes: {
+        scroll: {
+          '0%': { transform: 'translateX(0)' },
+          '100%': { transform: 'translateX(-50%)' },
+        },
       },
     },
   },
