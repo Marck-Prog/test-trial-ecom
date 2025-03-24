@@ -35,18 +35,18 @@ export function HomeCarousel({ items }: { items: ICarousel[] }) {
         {items.map((item) => (
           <CarouselItem key={item.title}>
             <Link href={item.url}>
-              <div className='flex aspect-[16/6] items-center justify-center p-6 relative -m-1'>
+              <div className='relative w-full h-[100vh] -m-1'>
                 <Image
                   src={item.image}
                   alt={item.title}
                   fill
-                  className='object-cover'
+                  className='object-cover w-full h-full'
                   priority
                 />
-                <div className='absolute w-1/3 left-16 md:left-32 top-1/2 transform -translate-y-1/2'>
+                <div className='absolute w-full md:w-1/3 left-4 md:left-32 top-1/2 transform -translate-y-1/2 px-6'>
                   <h2
                     className={cn(
-                      'text-xl md:text-6xl font-bold mb-4 text-primary  '
+                      'text-xl md:text-6xl font-bold mb-4 text-primary'
                     )}
                   >
                     {t(`${item.title}`)}
