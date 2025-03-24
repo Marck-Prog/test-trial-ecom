@@ -33,7 +33,7 @@ export default function LanguageSwitcher() {
   }
   return (
     <DropdownMenu>
-      <DropdownMenuTrigger className='header-button h-[41px]'>
+      <DropdownMenuTrigger className='header-button h-[20px]'>
         <div className='flex items-center gap-1'>
           <span className='text-xl'>
             {locales.find((l) => l.code === locale)?.icon}
