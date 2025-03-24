@@ -16,7 +16,7 @@ import { useTranslations } from 'next-intl'
 const Menu = ({ forAdmin = false }: { forAdmin?: boolean }) => {
   const t = useTranslations()
   return (
-    <div className='flex justify-end'>
+    <div className='flex items-center space-x-4'>
       <nav className='md:flex gap-3 hidden w-full'>
         <LanguageSwitcher />
         <ThemeSwitcher />
