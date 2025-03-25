@@ -158,17 +158,29 @@ const Email = z.string().min(1, 'Email is required').email('Email is invalid')
 const Password = z.string().min(3, 'Password must be at least 3 characters')
 const UserRole = z.string().min(1, 'role is required')
 
+const ImageUrl = z
+  .string()
+  .optional()
+  .refine(
+    (value) => !value || /^https?:\/\/.+\.(jpg|jpeg|png|gif|webp)$/.test(value),
+    {
+      message:
+        'Image must be a valid URL ending in .jpg, .jpeg, .png, .gif, or .webp',
+    }
+  )
+
 export const UserUpdateSchema = z.object({
   _id: MongoId,
   name: UserName,
   email: Email,
   role: UserRole,
+  image: ImageUrl,
 })
 
 export const UserInputSchema = z.object({
   name: UserName,
   email: Email,
-  image: z.string().optional(),
+  image: ImageUrl,
   emailVerified: z.boolean(),
   role: UserRole,
   password: Password,
