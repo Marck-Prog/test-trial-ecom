@@ -97,6 +97,7 @@ export default function Navbar({ site, dropdownItems }: NavbarProps) {
         <div className='flex items-center'>
           <NavIcons />
         </div>
+        {/* <Menu /> */}
       </nav>
     </>
   )
