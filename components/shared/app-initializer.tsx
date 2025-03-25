@@ -10,11 +10,9 @@ export default function AppInitializer({
   children: React.ReactNode
 }) {
   useEffect(() => {
-    // Set the initial setting in Zustand after render
     useSettingStore.setState({
       setting,
     })
-  }, [setting]) // Runs when setting prop changes
-
+  }, [setting])
   return children
 }
