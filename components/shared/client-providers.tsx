@@ -1,5 +1,7 @@
 'use client'
+
 import React from 'react'
+import { SessionProvider } from 'next-auth/react'
 import useCartSidebar from '@/hooks/use-cart-sidebar'
 import CartSidebar from './cart-sidebar'
 import { ThemeProvider } from './theme-provider'
@@ -18,20 +20,22 @@ export default function ClientProviders({
 
   return (
     <AppInitializer setting={setting}>
-      <ThemeProvider
-        attribute='class'
-        defaultTheme={setting.common.defaultTheme.toLocaleLowerCase()}
-      >
-        {visible ? (
-          <div className='flex min-h-screen'>
-            <div className='flex-1 overflow-hidden'>{children}</div>
-            <CartSidebar />
-          </div>
-        ) : (
-          <div>{children}</div>
-        )}
-        <Toaster />
-      </ThemeProvider>
+      <SessionProvider>
+        <ThemeProvider
+          attribute='class'
+          defaultTheme={setting.common.defaultTheme.toLowerCase()}
+        >
+          {visible ? (
+            <div className='flex min-h-screen'>
+              <div className='flex-1 overflow-hidden'>{children}</div>
+              <CartSidebar />
+            </div>
+          ) : (
+            <div>{children}</div>
+          )}
+          <Toaster />
+        </ThemeProvider>
+      </SessionProvider>
     </AppInitializer>
   )
 }
