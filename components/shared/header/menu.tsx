@@ -2,9 +2,9 @@ import { EllipsisVertical } from 'lucide-react'
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
   SheetHeader,
   SheetTitle,
+  SheetDescription,
   SheetTrigger,
 } from '@/components/ui/sheet'
 import CartButton from './cart-button'
@@ -15,23 +15,26 @@ import { useTranslations } from 'next-intl'
 
 const Menu = ({ forAdmin = false }: { forAdmin?: boolean }) => {
   const t = useTranslations()
+
   return (
-    <div className='flex items-center space-x-4'>
-      <nav className='md:flex gap-3 hidden w-full'>
+    <>
+      {/* Desktop Menu (Inline with Navbar) */}
+      <div className=''>
         <LanguageSwitcher />
-        <ThemeSwitcher />
         <UserButton />
-        {forAdmin ? null : <CartButton />}
-      </nav>
-      <nav className='md:hidden'>
+        {!forAdmin && <CartButton />}
+      </div>
+
+      {/* Mobile Menu (Sheet) */}
+      {/* <div className='md:hidden'>
         <Sheet>
           <SheetTrigger className='align-middle header-button'>
             <EllipsisVertical className='h-6 w-6' />
           </SheetTrigger>
-          <SheetContent className='bg-black text-white  flex flex-col items-start  '>
+          <SheetContent className='bg-black text-white flex flex-col items-start'>
             <SheetHeader className='w-full'>
-              <div className='flex items-center justify-between '>
-                <SheetTitle className='  '>{t('Header.Site Menu')}</SheetTitle>
+              <div className='flex items-center justify-between'>
+                <SheetTitle>{t('Header.Site Menu')}</SheetTitle>
                 <SheetDescription></SheetDescription>
               </div>
             </SheetHeader>
@@ -41,8 +44,8 @@ const Menu = ({ forAdmin = false }: { forAdmin?: boolean }) => {
             <CartButton />
           </SheetContent>
         </Sheet>
-      </nav>
-    </div>
+      </div> */}
+    </>
   )
 }
 
