@@ -13,7 +13,7 @@ const userSchema = new Schema<IUser>(
     name: { type: String, required: true },
     role: { type: String, required: true, default: 'User' },
     password: { type: String },
-    image: { type: String },
+    image: { type: String, required: false },
     emailVerified: { type: Boolean, default: false },
   },
   {
