@@ -46,8 +46,8 @@ export default function UserButtonClient() {
             <Image
               src={userImage}
               alt='Profile'
-              width={24}
-              height={24}
+              width={20}
+              height={20}
               className='rounded-full'
             />
           ) : (
