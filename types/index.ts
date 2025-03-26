@@ -29,10 +29,19 @@ export type IReviewDetails = IReviewInput & {
 }
 export type IProductInput = z.infer<typeof ProductInputSchema>
 
-export type HeaderMenu = {
+export interface SubItem {
   name: string
   href: string
-  subItems: string[] // Add subItems to the type
+}
+
+export interface SubCategory {
+  category: string
+  items: SubItem[]
+}
+
+export interface MenuItem {
+  name: string
+  subItems: SubCategory[]
 }
 
 export type Data = {
@@ -45,7 +54,7 @@ export type Data = {
     rating: number
     comment: string
   }[]
-  headerMenus: HeaderMenu[] // Update to use the new HeaderMenu type
+  headerMenus: MenuItem[]
   carousels: {
     image: string
     url: string
