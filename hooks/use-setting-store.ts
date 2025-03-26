@@ -17,9 +17,23 @@ const useSettingStore = create<SettingState>((set, get) => ({
     currency: data.settings[0].defaultCurrency,
   } as ClientSetting,
   setSetting: (newSetting: ClientSetting) => {
+    // Merge the database's availableCurrencies with the initial data to ensure flag is preserved
+    const mergedCurrencies = newSetting.availableCurrencies.map(
+      (dbCurrency) => {
+        const initialCurrency = data.settings[0].availableCurrencies.find(
+          (c) => c.code === dbCurrency.code
+        )
+        return {
+          ...dbCurrency,
+          flag: dbCurrency.flag || initialCurrency?.flag || '', // Preserve flag from DB or initial data
+        }
+      }
+    )
+
     set({
       setting: {
         ...newSetting,
+        availableCurrencies: mergedCurrencies,
         currency: newSetting.currency || get().setting.currency,
       },
     })
