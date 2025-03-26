@@ -16,7 +16,7 @@ const MobileMenu = () => {
     <>
       <div className=''>
         {/* Hamburger Menu Button */}
-        <div className='xl:hidden lg:mr-20 flex items-center'>
+        <div className='xl:hidden lg:mr-20 xs:mr-10 flex items-center'>
           <button
             onClick={toggleMenu}
             className='focus:outline-none text-gray-700 relative w-5 h-4 mb-0.5'
@@ -42,13 +42,13 @@ const MobileMenu = () => {
           </button>
 
           {/* Search Icon on small Screen */}
-          <Button
+          {/* <Button
             variant='ghost'
             size='icon'
             className='focus:outline-none lg:hidden xs:ml-1 md:ml-3 hover:bg-white'
           >
             <Search className='h-5 w-5' />
-          </Button>
+          </Button> */}
         </div>
 
         {/* Mobile Drawer Menu */}
