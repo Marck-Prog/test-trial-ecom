@@ -1,7 +1,8 @@
-import useCartStore from '@/hooks/use-cart-store'
+'use client'
+
 import { cn } from '@/lib/utils'
 import Link from 'next/link'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Button, buttonVariants } from '../ui/button'
 import { Separator } from '../ui/separator'
 import { ScrollArea } from '../ui/scroll-area'
@@ -14,6 +15,7 @@ import {
   SelectValue,
 } from '../ui/select'
 import { TrashIcon } from 'lucide-react'
+import useCartStore from '@/hooks/use-cart-store'
 import useSettingStore from '@/hooks/use-setting-store'
 import ProductPrice from './product/product-price'
 import { useLocale, useTranslations } from 'next-intl'
@@ -24,6 +26,8 @@ export default function CartSidebar() {
     cart: { items, itemsPrice },
     updateItem,
     removeItem,
+    showSidebar,
+    toggleSidebar,
   } = useCartStore()
   const {
     setting: {
@@ -32,94 +36,161 @@ export default function CartSidebar() {
   } = useSettingStore()
 
   const t = useTranslations()
-
   const locale = useLocale()
-  return (
-    <div className='w-32 overflow-y-auto'>
-      <div
-        className={`w-32 fixed  h-full ${
-          getDirection(locale) === 'rtl' ? 'border-r' : 'border-l'
-        }`}
-      >
-        <div className='p-2 h-full flex flex-col gap-2 justify-center items-center'>
-          <div className='text-center space-y-2'>
-            <div> {t('Cart.Subtotal')}</div>
-            <div className='font-bold '>
-              <ProductPrice price={itemsPrice} plain />
-            </div>
-            {itemsPrice > freeShippingMinPrice && (
-              <div className=' text-center text-xs'>
-                {t('Cart.Your order qualifies for FREE Shipping')}
-              </div>
-            )}
+  const dir = getDirection(locale)
 
-            <Link
-              className={cn(
-                buttonVariants({ variant: 'outline' }),
-                'rounded-full hover:no-underline w-full'
-              )}
-              href='/cart'
+  // Close sidebar when clicking outside
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (showSidebar && !event.target.closest('.cart-drawer')) {
+        toggleSidebar(false)
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside)
+    return () => document.removeEventListener('mousedown', handleClickOutside)
+  }, [showSidebar, toggleSidebar])
+
+  return (
+    <>
+      {/* Overlay (Dark background outside the drawer) */}
+      {showSidebar && (
+        <div
+          className='fixed inset-0 bg-gray-800/70 z-40'
+          onClick={() => toggleSidebar(false)}
+        />
+      )}
+
+      {/* Drawer */}
+      <div
+        className={cn(
+          'fixed inset-y-0 right-0 w-80 z-50 transform transition-transform duration-300 ease-in-out cart-drawer border border-gray-200',
+          showSidebar ? 'translate-x-0' : 'translate-x-full',
+          dir === 'rtl' ? 'left-0 right-auto' : 'right-0'
+        )}
+      >
+        <div className='h-full flex flex-col bg-white'>
+          <div className='flex items-center justify-between p-4 mb-2 mt-2 border-b'>
+            <h2 className='text-lg font-semibold text-gray-800'>
+              Your Cart: ({items.reduce((acc, item) => acc + item.quantity, 0)}{' '}
+              {t('Cart.Items')})
+            </h2>
+            <Button
+              variant='ghost'
+              size='sm'
+              onClick={() => toggleSidebar(false)}
+              className='text-gray-600 hover:text-gray-800'
             >
-              {t('Cart.Go to Cart')}
-            </Link>
-            <Separator className='mt-3' />
+              ✕
+            </Button>
           </div>
 
-          <ScrollArea className='flex-1  w-full'>
-            {items.map((item) => (
-              <div key={item.clientId}>
-                <div className='my-3'>
-                  <Link href={`/product/${item.slug}`}>
-                    <div className='relative h-24'>
-                      <Image
-                        src={item.image}
-                        alt={item.name}
-                        fill
-                        sizes='20vw'
-                        className='object-contain'
-                      />
+          {/* Scrollable Items Section */}
+          <ScrollArea className='flex-1'>
+            <div className='p-4 space-y-4'>
+              {items.map((item) => (
+                <div
+                  key={item.clientId}
+                  className='bg-white rounded-lg shadow-sm p-3'
+                >
+                  <div className='flex items-center gap-3'>
+                    {/* Product Image */}
+                    <Link
+                      href={`/product/${item.slug}`}
+                      onClick={() => toggleSidebar(false)}
+                    >
+                      <div className='relative w-16 h-16'>
+                        <Image
+                          src={item.image}
+                          alt={item.name}
+                          fill
+                          sizes='20vw'
+                          className='object-contain'
+                        />
+                      </div>
+                    </Link>
+
+                    {/* Product Details */}
+                    <div className='flex-1'>
+                      <Link
+                        href={`/product/${item.slug}`}
+                        onClick={() => toggleSidebar(false)}
+                      >
+                        <p className='text-sm font-medium text-gray-800 hover:underline'>
+                          {item.name}
+                        </p>
+                      </Link>
+                      <div className='text-sm text-gray-600'>
+                        <ProductPrice price={item.price} plain />
+                      </div>
+                      <div className='flex items-center gap-2 mt-1'>
+                        <Select
+                          value={item.quantity.toString()}
+                          onValueChange={(value) =>
+                            updateItem(item, Number(value))
+                          }
+                        >
+                          <SelectTrigger className='text-xs w-16 h-8'>
+                            <SelectValue />
+                          </SelectTrigger>
+                          <SelectContent>
+                            {Array.from({ length: item.countInStock }).map(
+                              (_, i) => (
+                                <SelectItem
+                                  value={(i + 1).toString()}
+                                  key={i + 1}
+                                >
+                                  {i + 1}
+                                </SelectItem>
+                              )
+                            )}
+                          </SelectContent>
+                        </Select>
+                        <Button
+                          variant='outline'
+                          size='sm'
+                          onClick={() => removeItem(item)}
+                          className='border-gray-300 text-gray-600 hover:text-red-600 hover:border-red-300'
+                        >
+                          <TrashIcon className='w-4 h-4' />
+                        </Button>
+                      </div>
                     </div>
-                  </Link>
-                  <div className='text-sm text-center font-bold'>
-                    <ProductPrice price={item.price} plain />
-                  </div>
-                  <div className='flex gap-2 mt-2'>
-                    <Select
-                      value={item.quantity.toString()}
-                      onValueChange={(value) => {
-                        updateItem(item, Number(value))
-                      }}
-                    >
-                      <SelectTrigger className='text-xs w-12 ml-1 h-auto py-0'>
-                        <SelectValue />
-                      </SelectTrigger>
-                      <SelectContent>
-                        {Array.from({ length: item.countInStock }).map(
-                          (_, i) => (
-                            <SelectItem value={(i + 1).toString()} key={i + 1}>
-                              {i + 1}
-                            </SelectItem>
-                          )
-                        )}
-                      </SelectContent>
-                    </Select>
-                    <Button
-                      variant={'outline'}
-                      size={'sm'}
-                      onClick={() => {
-                        removeItem(item)
-                      }}
-                    >
-                      <TrashIcon className='w-4 h-4' />
-                    </Button>
                   </div>
                 </div>
-                <Separator />
-              </div>
-            ))}
+              ))}
+            </div>
           </ScrollArea>
+
+          {/* Fixed Header Section */}
+          <div className='p-4 bg-gray-100 border-b border-gray-200'>
+            <div className='flex items-center justify-between mb-4'>
+              <h2 className='text-lg font-semibold text-gray-800'>
+                {t('Cart.Subtotal')}
+              </h2>
+              <div className='text-xl font-bold text-gray-800'>
+                <ProductPrice price={itemsPrice} plain />
+              </div>
+            </div>
+            <div className='text-center'>
+              <Link
+                href='/cart'
+                className={cn(
+                  buttonVariants({ variant: 'default' }),
+                  'w-full bg-gray-950 hover:bg-gray-900 text-white rounded-md'
+                )}
+                onClick={() => toggleSidebar(false)}
+              >
+                {t('Cart.Go to Cart')}
+              </Link>
+            </div>
+          </div>
+          {itemsPrice > freeShippingMinPrice && (
+            <div className='text-center text-xs text-green-600 my-2'>
+              {t('Cart.Your order qualifies for FREE Shipping')}
+            </div>
+          )}
         </div>
       </div>
-    </div>
+    </>
   )
 }
