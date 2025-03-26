@@ -19,9 +19,6 @@ export default async function Header() {
     searchSite: t('Search Site', { name: site.name }), // Format with site.name
   }
 
-  console.log('Header site:', site)
-  console.log('Header translations:', translations)
-
   return (
     <header className='sticky top-0 z-50'>
       <Navbar
