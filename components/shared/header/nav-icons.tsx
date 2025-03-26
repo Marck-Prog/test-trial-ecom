@@ -63,7 +63,7 @@ const NavIcons: React.FC<NavIconsProps> = ({
     }
   }, [isSearchOpen])
 
-  const logo = site?.logo || '/default-logo.png'
+  const logo = site?.logo || '/icons/logo.svg'
   const name = site?.name || 'Default Site'
 
   return (
