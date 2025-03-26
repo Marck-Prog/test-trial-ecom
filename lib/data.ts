@@ -930,35 +930,163 @@ We also offer valuable resources, including order tracking, product guides, and 
 
   headerMenus: [
     {
-      name: "Today's Deal",
-      href: '/search?tag=todays-deal',
-      subItems: ['Shirts', 'Pants', 'Jackets'],
-    },
-    {
       name: 'Accessories',
-      href: '/search?category=Accessories', // Added a href for consistency
-      subItems: ['Hats', 'Bags', 'Jewelry'],
+      subItems: [
+        {
+          category: 'SHIRTS',
+          items: [
+            // href: '/search?tag=featured',
+            {
+              name: 'Classic Tees',
+              href: '/search?category=threads&sub=classic-tees',
+            },
+            {
+              name: 'Oversized Tees',
+              href: '/search?category=threads&sub=oversized-tees',
+            },
+            {
+              name: 'Wash Tees',
+              href: '/search?category=threads&sub=wash-tees',
+            },
+            {
+              name: 'Kids Tees',
+              href: '/search?category=threads&sub=kids-tees',
+            },
+            {
+              name: 'Baby Crop',
+              href: '/search?category=threads&sub=baby-crop',
+            },
+            { name: 'Tanks', href: '/search?category=threads&sub=tanks' },
+            {
+              name: 'Crop Tees',
+              href: '/search?category=threads&sub=crop-tees',
+            },
+            {
+              name: 'Long Sleeves',
+              href: '/search?category=threads&sub=long-sleeves',
+            },
+          ],
+        },
+        {
+          category: 'SWEATS',
+          items: [
+            // href: '/search?tag=featured',
+            { name: 'Hoodies', href: '/search?category=threads&sub=hoodies' },
+            {
+              name: 'Sweatshirts',
+              href: '/search?category=threads&sub=sweatshirts',
+            },
+            {
+              name: 'Tracksuit',
+              href: '/search?category=threads&sub=tracksuit',
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'New Arrivals',
-      href: '/search?tag=new-arrival',
-      subItems: ['Brand A', 'Brand B'],
+      subItems: [
+        {
+          category: 'HEADWEAR',
+          items: [
+            // href: '/search?tag=new-arrival',
+            { name: 'Caps', href: '/search?category=accessories&sub=caps' },
+            {
+              name: 'Beanies',
+              href: '/search?category=accessories&sub=beanies',
+            },
+            { name: 'Visors', href: '/search?category=accessories&sub=visors' },
+          ],
+        },
+        {
+          category: 'BAGS',
+          // href: '/search?tag=new-arrival',
+          items: [
+            {
+              name: 'Backpacks',
+              href: '/search?category=accessories&sub=backpacks',
+            },
+            {
+              name: 'Tote Bags',
+              href: '/search?category=accessories&sub=tote-bags',
+            },
+            {
+              name: 'Crossbody Bags',
+              href: '/search?category=accessories&sub=crossbody-bags',
+            },
+          ],
+        },
+        {
+          category: 'JEWELRY',
+          items: [
+            // href: '/search?tag=new-arrival',
+            {
+              name: 'Necklaces',
+              href: '/search?category=accessories&sub=necklaces',
+            },
+            {
+              name: 'Bracelets',
+              href: '/search?category=accessories&sub=bracelets',
+            },
+            { name: 'Rings', href: '/search?category=accessories&sub=rings' },
+          ],
+        },
+      ],
     },
-    {
-      name: 'Featured Products',
-      href: '/search?tag=featured',
-      subItems: ['Minimalist', 'Vintage'],
-    },
+
     {
       name: 'Best Sellers',
-      href: '/search?tag=best-seller',
-      subItems: ['Design Your Own'],
+      subItems: [
+        {
+          category: 'BRANDS',
+          items: [
+            // href: '/search?tag=themes',
+            { name: 'Brand A', href: '/search?tag=collabs&sub=brand-a' },
+            { name: 'Brand B', href: '/search?tag=collabs&sub=brand-b' },
+            { name: 'Brand C', href: '/search?tag=collabs&sub=brand-c' },
+          ],
+        },
+        {
+          category: 'ARTISTS',
+          items: [
+            // href: '/search?tag=themes',
+            { name: 'Artist X', href: '/search?tag=collabs&sub=artist-x' },
+            { name: 'Artist Y', href: '/search?tag=collabs&sub=artist-y' },
+            { name: 'Artist Z', href: '/search?tag=collabs&sub=artist-z' },
+          ],
+        },
+      ],
+    },
+    {
+      name: 'Collections',
+      subItems: [
+        {
+          category: 'STYLES',
+          items: [
+            // href: '/search?tag=custom',
+            { name: 'Minimalist', href: '/search?tag=themes&sub=minimalist' },
+            { name: 'Vintage', href: '/search?tag=themes&sub=vintage' },
+            { name: 'Modern', href: '/search?tag=themes&sub=modern' },
+          ],
+        },
+        {
+          category: 'SEASONS',
+          items: [
+            // href: '/search?tag=custom',
+            { name: 'Spring', href: '/search?tag=themes&sub=spring' },
+            { name: 'Summer', href: '/search?tag=themes&sub=summer' },
+            { name: 'Fall', href: '/search?tag=themes&sub=fall' },
+            { name: 'Winter', href: '/search?tag=themes&sub=winter' },
+          ],
+        },
+      ],
     },
   ],
 
   carousels: [
     {
-      title: 'Most Popular Shoes For Sale',
+      title: 'Most Popular Graphic Shirt On Sale',
       buttonCaption: 'Shop Now',
       image: '/images/banner3.png',
       url: '/search?category=Shoes',
@@ -972,7 +1100,7 @@ We also offer valuable resources, including order tracking, product guides, and 
       isPublished: true,
     },
     {
-      title: 'Best Deals on Wrist Watches',
+      title: 'Best Deals on Summer Sale',
       buttonCaption: 'See More',
       image: '/images/banner2.png',
       url: '/search?category=Wrist Watches',
