@@ -8,6 +8,7 @@ import { routing } from '@/i18n/routing'
 import { notFound } from 'next/navigation'
 import { getSetting } from '@/lib/actions/setting.actions'
 import { cookies } from 'next/headers'
+import CartSidebar from '@/components/shared/cart-sidebar'
 
 const robotoCondensed = Roboto_Condensed({
   subsets: ['latin'],
@@ -57,6 +58,7 @@ export default async function AppLayout({
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ClientProviders setting={{ ...setting, currency }}>
             {children}
+            <CartSidebar />
           </ClientProviders>
         </NextIntlClientProvider>
       </body>
