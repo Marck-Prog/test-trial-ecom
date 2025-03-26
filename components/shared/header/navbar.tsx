@@ -7,20 +7,7 @@ import NavIcons from './nav-icons'
 import MobileMenu from './mobile-menu'
 import DropdownMenu from './dropdown'
 import TopBar from './topbar'
-
-interface DropdownCategory {
-  category: string
-  items: string[]
-}
-
-interface DropdownItems {
-  threads: DropdownCategory[]
-  accessories: DropdownCategory[]
-  collabs: DropdownCategory[]
-  themes: DropdownCategory[]
-  custom: DropdownCategory[]
-  whatsNew: DropdownCategory[]
-}
+import { MenuItem } from '@/types'
 
 interface Site {
   logo: string
@@ -29,10 +16,20 @@ interface Site {
 
 interface NavbarProps {
   site: Site
-  dropdownItems: DropdownItems
+  headerMenus: MenuItem[]
+  categories: string[]
+  translations: {
+    all: string
+    searchSite: string
+  }
 }
 
-export default function Navbar({ site, dropdownItems }: NavbarProps) {
+export default function Navbar({
+  site,
+  headerMenus,
+  categories,
+  translations,
+}: NavbarProps) {
   const [isScrolled, setIsScrolled] = useState(false)
 
   useEffect(() => {
@@ -45,6 +42,9 @@ export default function Navbar({ site, dropdownItems }: NavbarProps) {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  // Debugging: Log the site prop
+  console.log('Navbar site:', site)
+
   return (
     <>
       <div
@@ -54,10 +54,10 @@ export default function Navbar({ site, dropdownItems }: NavbarProps) {
       </div>
 
       <nav
-        className={`py-3 px-4 bg-white 4xl:px-80 2xl:px-20 xl:px-10 lg:px-10 md:px-8 sm:px-8 xs:px-4 flex items-center justify-between transition-all  ${
+        className={`py-3 px-4 bg-white 4xl:px-80 2xl:px-20 xl:px-10 lg:px-10 md:px-8 sm:px-8 xs:px-4 flex items-center justify-between transition-all ${
           isScrolled
             ? 'fixed top-0 left-0 right-0 bg-white duration-100 shadow-md z-40'
-            : 'relative bg-transparent duration-100 mt-10'
+            : 'relative bg-white duration-100 mt-10'
         }`}
       >
         <MobileMenu />
@@ -87,17 +87,23 @@ export default function Navbar({ site, dropdownItems }: NavbarProps) {
         </div>
 
         <div className='hidden xl:flex flex-1 space-x-6 text-black'>
-          <DropdownMenu label='Threads' items={dropdownItems.threads} />
-          <DropdownMenu label='Accessories' items={dropdownItems.accessories} />
-          <DropdownMenu label='Collabs' items={dropdownItems.collabs} />
-          <DropdownMenu label='Themes' items={dropdownItems.themes} />
-          <DropdownMenu label='Custom' items={dropdownItems.custom} />
+          {headerMenus.map((menu) => (
+            <DropdownMenu
+              key={menu.name}
+              label={menu.name}
+              items={menu.subItems}
+            />
+          ))}
         </div>
 
         <div className='flex items-center'>
-          <NavIcons />
+          <NavIcons
+            site={site}
+            siteName={site.name}
+            categories={categories}
+            translations={translations}
+          />
         </div>
-        {/* <Menu /> */}
       </nav>
     </>
   )
