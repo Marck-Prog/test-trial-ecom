@@ -49,7 +49,6 @@ export default function LanguageSwitcher() {
             alt={`${currentCurrency.name} Flag`}
             width={19}
             height={20}
-            className=''
           />
         ) : (
           <span>🏳️</span>
