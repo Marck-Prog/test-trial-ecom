@@ -1,42 +1,35 @@
 import { getSetting } from '@/lib/actions/setting.actions'
+import { getAllCategories } from '@/lib/actions/product.actions'
+import { getTranslations } from 'next-intl/server'
 import Navbar from './navbar'
-import Menu from './menu'
-// import Menu from './menu'
+import data from '@/lib/data'
 
 export default async function Header() {
-  // Data for dropdowns (can be fetched from an API or CMS in a real app)
-  const dropdownItems = {
-    threads: [
-      {
-        category: 'SHIRTS',
-        items: [
-          'Classic Tees',
-          'Oversized Tees',
-          'Wash Tees',
-          'Kids Tees',
-          'Baby Crop',
-          'Tanks',
-          'Crop Tees',
-          'Long Sleeves',
-        ],
-      },
-      { category: 'SWEATS', items: ['Hoodies', 'Sweatshirts', 'Tracksuit'] },
-    ],
-    accessories: [],
-    collabs: [],
-    themes: [],
-    custom: [],
-    whatsNew: [],
+  const settings = await getSetting()
+  const site = settings?.site || {
+    logo: '/icons/logo.svg',
+    name: 'Default Site',
+  }
+  const categories = await getAllCategories()
+  const t = await getTranslations('Header') // Scope translations to 'Header' namespace
+
+  // Serialize translations, formatting 'Search Site' with the site name
+  const translations = {
+    all: t('All'),
+    searchSite: t('Search Site', { name: site.name }), // Format with site.name
   }
 
-  const { site } = await getSetting()
+  console.log('Header site:', site)
+  console.log('Header translations:', translations)
 
   return (
     <header className='sticky top-0 z-50'>
-      {/* <div className='flex justify-between'> */}
-      <Navbar site={site} dropdownItems={dropdownItems} />
-      {/* <Menu /> */}
-      {/* </div> */}
+      <Navbar
+        site={site}
+        headerMenus={data.headerMenus}
+        categories={categories}
+        translations={translations}
+      />
     </header>
   )
 }
