@@ -42,9 +42,6 @@ export default function Navbar({
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
-  // Debugging: Log the site prop
-  console.log('Navbar site:', site)
-
   return (
     <>
       <div
