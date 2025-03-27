@@ -1,6 +1,5 @@
 import createMiddleware from 'next-intl/middleware'
 import { routing } from './i18n/routing'
-
 import NextAuth from 'next-auth'
 import authConfig from './auth.config'
 
@@ -13,40 +12,62 @@ const publicPages = [
   '/cart/(.*)',
   '/product/(.*)',
   '/page/(.*)',
-  // (/secret requires auth)
 ]
 
 const intlMiddleware = createMiddleware(routing)
 const { auth } = NextAuth(authConfig)
 
-export default auth((req) => {
-  const publicPathnameRegex = RegExp(
-    `^(/(${routing.locales.join('|')}))?(${publicPages
-      .flatMap((p) => (p === '/' ? ['', '/'] : p))
-      .join('|')})/?$`,
-    'i'
-  )
-  const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname)
+// middleware.ts (with error handling)
+export default auth(async (req) => {
+  try {
+    const publicPathnameRegex = RegExp(
+      `^(/(${routing.locales.join('|')}))?(${publicPages
+        .flatMap((p) => (p === '/' ? ['', '/'] : p))
+        .join('|')})/?$`,
+      'i'
+    )
+    const isPublicPage = publicPathnameRegex.test(req.nextUrl.pathname)
 
-  if (isPublicPage) {
-    // return NextResponse.next()
-    return intlMiddleware(req)
-  } else {
-    if (!req.auth) {
-      const newUrl = new URL(
-        `/sign-in?callbackUrl=${
-          encodeURIComponent(req.nextUrl.pathname) || '/'
-        }`,
-        req.nextUrl.origin
+    console.log(
+      'Middleware - Path:',
+      req.nextUrl.pathname,
+      'Locale:',
+      req.headers.get('accept-language')
+    )
+
+    if (isPublicPage) {
+      const response = intlMiddleware(req)
+      response.headers.set(
+        'x-locale',
+        req.nextUrl.pathname.split('/')[1] || routing.defaultLocale
       )
-      return Response.redirect(newUrl)
+      return response
     } else {
-      return intlMiddleware(req)
+      if (!req.auth) {
+        const locale =
+          req.nextUrl.pathname.split('/')[1] || routing.defaultLocale
+        const callbackUrl =
+          encodeURIComponent(req.nextUrl.pathname) || `/${locale}`
+        const newUrl = new URL(
+          `/${locale}/sign-in?callbackUrl=${callbackUrl}`,
+          req.nextUrl.origin
+        )
+        return Response.redirect(newUrl)
+      } else {
+        const response = intlMiddleware(req)
+        response.headers.set(
+          'x-locale',
+          req.nextUrl.pathname.split('/')[1] || routing.defaultLocale
+        )
+        return response
+      }
     }
+  } catch (error) {
+    console.error('Middleware Error:', error)
+    return Response.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 })
 
 export const config = {
-  // Skip all paths that should not be internationalized
   matcher: ['/((?!api|_next|.*\\..*).*)'],
 }
