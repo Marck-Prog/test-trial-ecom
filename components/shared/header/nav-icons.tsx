@@ -1,9 +1,6 @@
 'use client'
 
-import { useState, useEffect, useRef } from 'react'
-import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import { Search, ShoppingCart } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import {
   Select,
@@ -12,11 +9,13 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { Search } from 'lucide-react'
+import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect, useRef, useState } from 'react'
+import CartButton from './cart-button'
 import LanguageSwitcher from './language-switcher'
 import UserButtonClient from './UserButtonClient'
-import Link from 'next/link'
-import Image from 'next/image'
-import CartButton from './cart-button'
 
 interface Site {
   logo: string
@@ -35,7 +34,6 @@ interface NavIconsProps {
 
 const NavIcons: React.FC<NavIconsProps> = ({
   site,
-  siteName,
   categories,
   translations,
 }) => {
