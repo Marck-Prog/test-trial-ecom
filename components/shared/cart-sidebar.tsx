@@ -4,7 +4,6 @@ import { cn } from '@/lib/utils'
 import Link from 'next/link'
 import React, { useEffect } from 'react'
 import { Button, buttonVariants } from '../ui/button'
-import { Separator } from '../ui/separator'
 import { ScrollArea } from '../ui/scroll-area'
 import Image from 'next/image'
 import {
