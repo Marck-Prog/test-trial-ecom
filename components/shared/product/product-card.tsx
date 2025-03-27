@@ -25,7 +25,7 @@ const ProductCard = ({
   const ProductImage = () => (
     <Link href={`/product/${product.slug}`}>
       <div className='relative h-52'>
-        {product.images.length > 1 ? (
+        {product.images.length > 1 && product.images[0] && product.images[1] ? (
           <ImageHover
             src={product.images[0]}
             hoverSrc={product.images[1]}
@@ -33,18 +33,21 @@ const ProductCard = ({
           />
         ) : (
           <div className='relative h-52'>
-            <Image
-              src={product.images[0]}
-              alt={product.name}
-              fill
-              sizes='80vw'
-              className='object-contain'
-            />
+            {product.images[0] ? (
+              <Image
+                src={product.images[0]}
+                alt={product.name}
+                fill
+                sizes='80vw'
+                className='object-contain'
+              />
+            ) : null}
           </div>
         )}
       </div>
     </Link>
   )
+
   const ProductDetails = () => (
     <div className='flex-1 space-y-2'>
       <p className='font-bold'>{product.brand}</p>
