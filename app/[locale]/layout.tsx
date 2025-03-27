@@ -19,14 +19,19 @@ export async function generateMetadata() {
   const {
     site: { slogan, name, description, url },
   } = await getSetting()
-  return {
+  const metadata = {
     title: {
       template: `%s | ${name}`,
       default: `${name}. ${slogan}`,
     },
     description: description,
     metadataBase: new URL(url),
+    icons: {
+      icon: '/favicon.png',
+    },
   }
+  console.log('Metadata:', metadata)
+  return metadata
 }
 
 export default async function AppLayout({
