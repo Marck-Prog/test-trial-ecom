@@ -1,21 +1,8 @@
-import { EllipsisVertical } from 'lucide-react'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-  SheetDescription,
-  SheetTrigger,
-} from '@/components/ui/sheet'
 import CartButton from './cart-button'
-import UserButton from './user-button'
-import ThemeSwitcher from './theme-switcher'
 import LanguageSwitcher from './language-switcher'
-import { useTranslations } from 'next-intl'
+import UserButton from './user-button'
 
 const Menu = ({ forAdmin = false }: { forAdmin?: boolean }) => {
-  const t = useTranslations()
-
   return (
     <>
       {/* Desktop Menu (Inline with Navbar) */}
