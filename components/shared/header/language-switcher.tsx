@@ -15,7 +15,6 @@ import useSettingStore from '@/hooks/use-setting-store'
 import { i18n } from '@/i18n-config'
 import { Link, usePathname } from '@/i18n/routing'
 import { setCurrencyOnServer } from '@/lib/actions/setting.actions'
-import { ChevronDownIcon } from 'lucide-react'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import Image from 'next/image'
 
@@ -30,6 +29,9 @@ export default function LanguageSwitcher() {
     setCurrency,
   } = useSettingStore()
 
+  console.log('Available Currencies:', availableCurrencies)
+  console.log('Selected Currency Code:', currency)
+
   const handleCurrencyChange = async (newCurrency: string) => {
     await setCurrencyOnServer(newCurrency)
     setCurrency(newCurrency)
@@ -38,6 +40,12 @@ export default function LanguageSwitcher() {
   const currentCurrency =
     availableCurrencies.find((c) => c.code === currency) ||
     availableCurrencies[0]
+
+  console.log('Current Currency:', currentCurrency)
+
+  if (!currentCurrency?.flag || currentCurrency.flag === '') {
+    console.warn('Missing or empty flag for currency:', currentCurrency)
+  }
 
   return (
     <>
@@ -49,6 +57,9 @@ export default function LanguageSwitcher() {
             alt={`${currentCurrency.name} Flag`}
             width={19}
             height={20}
+            onError={() =>
+              console.error(`Failed to load flag for ${currentCurrency.code}`)
+            }
           />
         ) : (
           <span>🏳️</span>
