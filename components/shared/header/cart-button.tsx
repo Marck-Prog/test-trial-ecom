@@ -1,13 +1,12 @@
 'use client'
 
-import Link from 'next/link'
-import useIsMounted from '@/hooks/use-is-mounted'
-import { cn } from '@/lib/utils'
-import useCartStore from '@/hooks/use-cart-store'
-import { useLocale, useTranslations } from 'next-intl'
-import { getDirection } from '@/i18n-config'
 import { Button } from '@/components/ui/button'
+import useCartStore from '@/hooks/use-cart-store'
+import useIsMounted from '@/hooks/use-is-mounted'
+import { getDirection } from '@/i18n-config'
+import { cn } from '@/lib/utils'
 import { ShoppingCart } from 'lucide-react'
+import { useLocale } from 'next-intl'
 
 export default function CartButton() {
   const isMounted = useIsMounted()
@@ -16,7 +15,6 @@ export default function CartButton() {
     toggleSidebar,
   } = useCartStore()
   const cartItemsCount = items.reduce((a, c) => a + c.quantity, 0)
-  const t = useTranslations()
   const locale = useLocale()
 
   return (
