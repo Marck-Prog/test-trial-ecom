@@ -15,19 +15,24 @@ import { IOrder } from '@/lib/db/models/order.model'
 import { formatDateTime, formatId } from '@/lib/utils'
 import BrowsingHistoryList from '@/components/shared/browsing-history-list'
 import ProductPrice from '@/components/shared/product/product-price'
+import { headers } from 'next/headers'
 
 const PAGE_TITLE = 'Your Orders'
 export const metadata: Metadata = {
   title: PAGE_TITLE,
 }
+
 export default async function OrdersPage(props: {
   searchParams: Promise<{ page: string }>
 }) {
   const searchParams = await props.searchParams
   const page = Number(searchParams.page) || 1
-  const orders = await getMyOrders({
-    page,
-  })
+  const orders = await getMyOrders({ page })
+
+  const headerList = headers()
+  const locale = headerList.get('x-locale') || 'en'
+  console.log('OrdersPage - Locale:', locale)
+
   return (
     <div>
       <div className='flex gap-2'>
@@ -67,7 +72,11 @@ export default async function OrdersPage(props: {
                   {formatDateTime(order.createdAt!).dateTime}
                 </TableCell>
                 <TableCell>
-                  <ProductPrice price={order.totalPrice} plain />
+                  <ProductPrice
+                    price={order.totalPrice} // Already converted
+                    currency={order.currency} // Pass the currency details
+                    plain={true}
+                  />
                 </TableCell>
                 <TableCell>
                   {order.isPaid && order.paidAt
